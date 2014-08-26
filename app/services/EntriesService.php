@@ -2,9 +2,7 @@
 namespace Craft;
 
 /**
- * EntriesService provides APIs for managing entries in Craft.
- *
- * An instance of EntriesService is globally accessible in Craft via {@link WebApp::entries `craft()->entries`}.
+ * Class EntriesService
  *
  * @author    Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @copyright Copyright (c) 2014, Pixel & Tonic, Inc.
@@ -21,14 +19,10 @@ class EntriesService extends BaseApplicationComponent
 	/**
 	 * Returns an entry by its ID.
 	 *
-	 * ```php
-	 * $entry = craft()->entries->getEntryById($entryId);
-	 * ```
+	 * @param int         $entryId
+	 * @param string|null $localeId
 	 *
-	 * @param int    $entryId  The entry’s ID.
-	 * @param string $localeId The locale to fetch the entry in. Defaults to {@link WebApp::language `craft()->language`}.
-	 *
-	 * @return EntryModel|null The entry with the given ID, or `null` if an entry could not be found.
+	 * @return EntryModel|null
 	 */
 	public function getEntryById($entryId, $localeId = null)
 	{
@@ -36,30 +30,12 @@ class EntriesService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Saves a new or existing entry.
+	 * Saves an entry.
 	 *
-	 * ```php
-	 * $entry = new EntryModel();
-	 * $entry->sectionId = 10;
-	 * $entry->typeId    = 1;
-	 * $entry->authorId  = 5;
-	 * $entry->enabled   = true;
-	 *
-	 * $entry->getContent()->title = "Hello World!";
-	 * $entry->getContent()->body  = "<p>I can’t believe I literally just called this “Hello World!”.</p>";
-	 *
-	 * $success = craft()->entries->saveEntry($entry);
-	 *
-	 * if (!$success)
-	 * {
-	 *     Craft::log('Couldn’t save the entry "'.$entry->title.'"', LogLevel::Error);
-	 * }
-	 * ```
-	 *
-	 * @param EntryModel $entry The entry to be saved.
+	 * @param EntryModel $entry
 	 *
 	 * @throws \Exception
-	 * @return bool Whether the entry was saved successfully.
+	 * @return bool
 	 */
 	public function saveEntry(EntryModel $entry)
 	{
@@ -256,10 +232,10 @@ class EntriesService extends BaseApplicationComponent
 	/**
 	 * Deletes an entry(s).
 	 *
-	 * @param EntryModel|EntryModel[] $entries An entry, or an array of entries, to be deleted.
+	 * @param EntryModel|array $entries
 	 *
 	 * @throws \Exception
-	 * @return bool Whether the entry deletion was successful.
+	 * @return bool
 	 */
 	public function deleteEntry($entries)
 	{
@@ -340,9 +316,9 @@ class EntriesService extends BaseApplicationComponent
 	/**
 	 * Deletes an entry(s) by its ID.
 	 *
-	 * @param int|array $entryId The ID of an entry to delete, or an array of entry IDs.
+	 * @param int|array $entryId
 	 *
-	 * @return bool Whether the entry deletion was successful.
+	 * @return bool
 	 */
 	public function deleteEntryById($entryId)
 	{

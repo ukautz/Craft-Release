@@ -21,13 +21,6 @@ class UserModel extends BaseElementModel
 	 */
 	protected $elementType = ElementType::User;
 
-	/**
-	 * The cached list of groups the user belongs to. Set by {@link getGroups()}.
-	 *
-	 * @var array
-	 */
-	private $_groups;
-
 	// Public Methods
 	// =========================================================================
 
@@ -60,33 +53,14 @@ class UserModel extends BaseElementModel
 	 */
 	public function getGroups($indexBy = null)
 	{
-		if (!isset($this->_groups))
+		if (craft()->getEdition() == Craft::Pro)
 		{
-			if (craft()->getEdition() == Craft::Pro)
-			{
-				$this->_groups = craft()->userGroups->getGroupsByUserId($this->id);
-			}
-			else
-			{
-				$this->_groups = array();
-			}
-		}
-
-		if (!$indexBy)
-		{
-			$groups = $this->_groups;
+			return craft()->userGroups->getGroupsByUserId($this->id, $indexBy);
 		}
 		else
 		{
-			$groups = array();
-
-			foreach ($this->_groups as $group)
-			{
-				$groups[$group->$indexBy] = $group;
-			}
+			return array();
 		}
-
-		return $groups;
 	}
 
 	/**

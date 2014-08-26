@@ -17,7 +17,7 @@ class HttpSessionService extends \CHttpSession
 	// =========================================================================
 
 	/**
-	 * Initializes the application component.
+	 * Init
 	 *
 	 * @return null
 	 */

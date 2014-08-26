@@ -2,7 +2,7 @@
 namespace Craft;
 
 /**
- * EAcceleratorCache implements a cache application module based on [eaccelerator](http://eaccelerator.net/).
+ * EAcceleratorCache implements a cache application module based on {@link http://eaccelerator.net/ eaccelerator}.
  *
  * To use this application component, the eAccelerator PHP extension must be loaded.
  *

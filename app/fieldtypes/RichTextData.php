@@ -8,7 +8,7 @@ namespace Craft;
  * @copyright Copyright (c) 2014, Pixel & Tonic, Inc.
  * @license   http://buildwithcraft.com/license Craft License Agreement
  * @see       http://buildwithcraft.com
- * @package   craft.app.fieldtypes
+ * @package   craft.app.etc.fieldtypes
  * @since     1.0
  */
 class RichTextData extends \Twig_Markup

@@ -32,7 +32,7 @@ class MigrationsService extends BaseApplicationComponent
 	// =========================================================================
 
 	/**
-	 * Initializes the application component.
+	 * Init
 	 *
 	 * @throws Exception
 	 * @return bool|null

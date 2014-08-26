@@ -2,9 +2,7 @@
 namespace Craft;
 
 /**
- * HttpRequestService provides APIs for getting information about the current HTTP request.
- *
- * An instance of HttpRequestService is globally accessible in Craft via {@link WebApp::entries `craft()->request`}.
+ * Class HttpRequestService
  *
  * @author    Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @copyright Copyright (c) 2014, Pixel & Tonic, Inc.
@@ -87,7 +85,7 @@ class HttpRequestService extends \CHttpRequest
 	// =========================================================================
 
 	/**
-	 * Initializes the application component.
+	 * Init
 	 *
 	 * @return null
 	 */
@@ -144,7 +142,7 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the script name used to access Craft (e.g. “index.php”).
+	 * Returns the script name used to access Craft.
 	 *
 	 * @return string
 	 */
@@ -155,13 +153,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the request’s Craft path.
+	 * Returns the request's path, without the CP trigger segment if there is one.
 	 *
-	 * Note that the path will not include the [CP trigger](http://buildwithcraft.com/docs/config-settings#cpTrigger)
-	 * if it’s a CP request, or the [page trigger](http://buildwithcraft.com/docs/config-settings#pageTrigger) or page
-	 * number if it’s a paginated request.
-	 *
-	 * @return string The Craft path.
+	 * @return string
 	 */
 	public function getPath()
 	{
@@ -169,13 +163,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns an array of the Craft path’s segments.
+	 * Returns an array of the path segments, without the CP trigger segment if there is one.
 	 *
-	 * Note that the segments will not include the [CP trigger](http://buildwithcraft.com/docs/config-settings#cpTrigger)
-	 * if it’s a CP request, or the [page trigger](http://buildwithcraft.com/docs/config-settings#pageTrigger) or page
-	 * number if it’s a paginated request.
-	 *
-	 * @return array The Craft path’s segments.
+	 * @return array
 	 */
 	public function getSegments()
 	{
@@ -183,11 +173,11 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a specific segment from the Craft path.
+	 * Returns a specific URI segment, or null if the segment doesn't exist.
 	 *
-	 * @param int $num Which segment to return (1-indexed).
+	 * @param int $num
 	 *
-	 * @return string|null The matching segment, or `null` if there wasn’t one.
+	 * @return string|null
 	 */
 	public function getSegment($num)
 	{
@@ -207,9 +197,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the current page number.
+	 * Returns the page number if this is a paginated request.
 	 *
-	 * @return int The page number.
+	 * @return int
 	 */
 	public function getPageNum()
 	{
@@ -217,9 +207,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the request’s token, if there is one.
+	 * Returns the request's token, if there is one.
 	 *
-	 * @return string|null The request’s token, or `null` if there isn’t one.
+	 * @return string|null
 	 */
 	public function getToken()
 	{
@@ -227,15 +217,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns whether the current request should be routed to the Control Panel.
+	 * Returns whether this is a CP request.
 	 *
-	 * The result depends on whether the first segment in the URI matches the
-	 * [CP trigger](http://buildwithcraft.com/docs/config-settings#cpTrigger).
-	 *
-	 * Note that even if this function returns `true`, the request will not necessarily route to the Control Panel.
-	 * It could instead route to a resource, for example.
-	 *
-	 * @return bool Whether the current request should be routed to the Control Panel.
+	 * @return bool
 	 */
 	public function isCpRequest()
 	{
@@ -243,11 +227,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns whether the current request should be routed to the front-end site.
+	 * Returns whether this is a site request.
 	 *
-	 * The result will always just be the opposite of whatever {@link isCpRequest()} returns.
-	 *
-	 * @return bool Whether the current request should be routed to the front-end site.
+	 * @return bool
 	 */
 	public function isSiteRequest()
 	{
@@ -255,12 +237,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns whether the current request should be routed to a resource.
+	 * Returns whether this is a resource request.
 	 *
-	 * The result depends on whether the first segment in the Craft path matches the
-	 * [resource trigger](http://buildwithcraft.com/docs/config-settings#resourceTrigger).
-	 *
-	 * @return bool Whether the current request should be routed to a resource.
+	 * @return bool
 	 */
 	public function isResourceRequest()
 	{
@@ -269,17 +248,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns whether the current request should be routed to a specific controller action before normal request
-	 * routing takes over.
+	 * Returns whether this is an action request.
 	 *
-	 * There are several ways that this method could return `true`:
-	 *
-	 * - If the first segment in the Craft path matches the
-	 *   [action trigger](http://buildwithcraft.com/docs/config-settings#actionTrigger)
-	 * - If there is an 'action' param in either the POST data or query string
-	 * - If the Craft path matches the Login path, the Logout path, or the Set Password path
-	 *
-	 * @return bool Whether the current request should be routed to a controller action.
+	 * @return bool
 	 */
 	public function isActionRequest()
 	{
@@ -288,9 +259,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns an array of the action path segments, if this is an {@link isActionRequest() action request}.
+	 * Returns an array of the action path segments for action requests.
 	 *
-	 * @return array|null The action path segments, or `null` if this isn’t an action request.
+	 * @return array|null
 	 */
 	public function getActionSegments()
 	{
@@ -301,7 +272,7 @@ class HttpRequestService extends \CHttpRequest
 	/**
 	 * Returns whether this is a Live Preview request.
 	 *
-	 * @return bool Whether this is a Live Preview request.
+	 * @return bool
 	 */
 	public function isLivePreview()
 	{
@@ -314,9 +285,7 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the MIME type that should probably be returned for the current request.
-	 *
-	 * @return string The MIME type.
+	 * @return mixed
 	 */
 	public function getMimeType()
 	{
@@ -330,35 +299,14 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a query string parameter, or all of them.
+	 * Returns the named GET parameter value, or the entire GET array if no name is specified. If $name is specified and
+	 * the GET parameter does not exist, $defaultValue will be returned. $name can also represent a nested param using
+	 * dot syntax, e.g. getQuery('fields.body')
 	 *
-	 * If $name is specified, then the corresponding query string parameter will be returned if it exists, or
-	 * $defaultValue will be returned if it doesn’t.
+	 * @param string|null $name
+	 * @param string|null $defaultValue
 	 *
-	 * ```php
-	 * $foo = craft()->request->getQuery('foo'); // Returns $_GET['foo'], if it exists
-	 * ```
-	 *
-	 * $name can also represent a nested parameter using a dot-delimited string.
-	 *
-	 * ```php
-	 * $bar = craft()->request->getQuery('foo.bar'); // Returns $_GET['foo']['bar'], if it exists
-	 * ```
-	 *
-	 * If $name is omitted, the entire $_GET array will be returned instead:
-	 *
-	 * ```php
-	 * $allTheQueryParams = craft()->request->getQuery(); // Returns $_GET
-	 * ```
-	 *
-	 * All values will be converted to UTF-8, regardless of the original character encoding.
-	 *
-	 * @param string|null $name         The dot-delimited name of the query string param to be fetched, if any.
-	 * @param mixed       $defaultValue The fallback value to be returned if no param exists by the given $name.
-	 *                                  Defaults to `null`.
-	 *
-	 * @return mixed The value of the corresponding query string param if a single param was requested, or $defaultValue
-	 *               if that value didn’t exist, or the entire $_GET array if no single param was requested.
+	 * @return mixed
 	 */
 	public function getQuery($name = null, $defaultValue = null)
 	{
@@ -366,25 +314,12 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a query string parameter, or bails on the request with a 400 error if that parameter doesn’t exist.
+	 * Returns the named GET parameter value, or throws an exception if it's not set.
 	 *
-	 * ```php
-	 * $foo = craft()->request->getRequiredQuery('foo'); // Returns $_GET['foo']
-	 * ```
-	 *
-	 * $name can also represent a nested parameter using a dot-delimited string.
-	 *
-	 * ```php
-	 * $bar = craft()->request->getRequiredQuery('foo.bar'); // Returns $_GET['foo']['bar']
-	 * ```
-	 *
-	 * The returned value will be converted to UTF-8, regardless of the original character encoding.
-	 *
-	 * @param string $name The dot-delimited name of the query string param to be fetched.
+	 * @param string $name
 	 *
 	 * @throws HttpException
-	 *
-	 * @return mixed The value of the corresponding query string param.
+	 * @return mixed
 	 */
 	public function getRequiredQuery($name)
 	{
@@ -401,35 +336,14 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a POST parameter, or all of them.
+	 * Returns the named POST parameter value, or the entire POST array if no name is specified. If $name is specified
+	 * and the POST parameter does not exist, $defaultValue will be returned. $name can also represent a nested param
+	 * using dot syntax, e.g. getPost('fields.body').
 	 *
-	 * If $name is specified, then the corresponding POST parameter will be returned if it exists, or
-	 * $defaultValue will be returned if it doesn’t.
+	 * @param string|null $name
+	 * @param string|null $defaultValue
 	 *
-	 * ```php
-	 * $foo = craft()->request->getPost('foo'); // Returns $_POST['foo'], if it exists
-	 * ```
-	 *
-	 * $name can also represent a nested parameter using a dot-delimited string.
-	 *
-	 * ```php
-	 * $bar = craft()->request->getPost('foo.bar'); // Returns $_POST['foo']['bar'], if it exists
-	 * ```
-	 *
-	 * If $name is omitted, the entire $_POST array will be returned instead:
-	 *
-	 * ```php
-	 * $allThePostParams = craft()->request->getPost(); // Returns $_POST
-	 * ```
-	 *
-	 * All values will be converted to UTF-8, regardless of the original character encoding.
-	 *
-	 * @param string|null $name         The dot-delimited name of the POST param to be fetched, if any.
-	 * @param mixed       $defaultValue The fallback value to be returned if no param exists by the given $name.
-	 *                                  Defaults to `null`.
-	 *
-	 * @return mixed The value of the corresponding POST param if a single param was requested, or $defaultValue
-	 *               if that value didn’t exist, or the entire $_POST array if no single param was requested.
+	 * @return mixed
 	 */
 	public function getPost($name = null, $defaultValue = null)
 	{
@@ -437,25 +351,12 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a POST parameter, or bails on the request with a 400 error if that parameter doesn’t exist.
+	 * Returns the named GET or POST parameter value, or throws an exception if it's not set.
 	 *
-	 * ```php
-	 * $foo = craft()->request->getRequiredPost('foo'); // Returns $_POST['foo']
-	 * ```
-	 *
-	 * $name can also represent a nested parameter using a dot-delimited string.
-	 *
-	 * ```php
-	 * $bar = craft()->request->getRequiredPost('foo.bar'); // Returns $_POST['foo']['bar']
-	 * ```
-	 *
-	 * The returned value will be converted to UTF-8, regardless of the original character encoding.
-	 *
-	 * @param string $name The dot-delimited name of the POST param to be fetched.
+	 * @param string $name
 	 *
 	 * @throws HttpException
-	 *
-	 * @return mixed The value of the corresponding POST param.
+	 * @return mixed
 	 */
 	public function getRequiredPost($name)
 	{
@@ -472,29 +373,12 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a parameter from either the query string or POST data.
+	 * Checks for a value in GET and POST.
 	 *
-	 * This method will first search for the given paramater in the query string, calling {@link getQuery()} internally,
-	 * and if that doesn’t come back with a value, it will call {@link getPost()}. If that doesn’t come back with a
-	 * value either, $defaultValue will be returned.
+	 * @param string $name
+	 * @param null   $defaultValue
 	 *
-	 * ```php
-	 * $foo = craft()->request->getParam('foo'); // Returns $_GET['foo'] or $_POST['foo'], if either exist
-	 * ```
-	 *
-	 * $name can also represent a nested parameter using a dot-delimited string.
-	 *
-	 * ```php
-	 * $bar = craft()->request->getParam('foo.bar'); // Returns $_GET['foo']['bar'] or $_POST['foo']['bar'], if either exist
-	 * ```
-	 *
-	 * All values will be converted to UTF-8, regardless of the original character encoding.
-	 *
-	 * @param string $name         The dot-delimited name of the param to be fetched.
-	 * @param mixed  $defaultValue The fallback value to be returned if no param exists by the given $name.
-	 *                             Defaults to `null`.
-	 *
-	 * @return mixed The value of the corresponding param, or $defaultValue if that value didn’t exist.
+	 * @return mixed|null
 	 */
 	public function getParam($name, $defaultValue = null)
 	{
@@ -511,27 +395,12 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a parameter from either the query string or POST data, or bails on the request with a 400 error if that
-	 * parameter doesn’t exist anywhere.
+	 * Returns the named GET or POST parameter value, or throws an exception if it's not set.
 	 *
-	 * This method will first search for the given paramater in the query string, calling {@link getQuery()} internally,
-	 * and if that doesn’t come back with a value, it will call {@link getPost()}.
+	 * @param string $name
 	 *
-	 * ```php
-	 * $foo = craft()->request->getRequiredParam('foo'); // Returns $_GET['foo'] or $_POST['foo']
-	 * ```
-	 *
-	 * $name can also represent a nested parameter using a dot-delimited string.
-	 *
-	 * ```php
-	 * $bar = craft()->request->getParam('foo.bar'); // Returns $_GET['foo']['bar'] or $_POST['foo']['bar'], if either exist
-	 * ```
-	 *
-	 * All values will be converted to UTF-8, regardless of the original character encoding.
-	 *
-	 * @param string $name The dot-delimited name of the param to be fetched.
-	 *
-	 * @return mixed The value of the corresponding param, or $defaultValue if that value didn’t exist.
+	 * @throws HttpException
+	 * @return mixed
 	 */
 	public function getRequiredParam($name)
 	{
@@ -548,13 +417,14 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns whether the request is coming from a mobile browser.
+	 * Returns whether the request is coming from a mobile browser. Detection script courtesy of
+	 * {@link http://detectmobilebrowsers.com}
 	 *
-	 * The detection script is provided by http://detectmobilebrowsers.com. It was last updated on 2013-02-04.
+	 * Last updated: 2013-02-04
 	 *
-	 * @param bool $detectTablets Whether tablets should be considered “modile”.
+	 * @param bool $detectTablets
 	 *
-	 * @return bool Whether the request is coming from a mobile browser.
+	 * @return bool
 	 */
 	public function isMobileBrowser($detectTablets = false)
 	{
@@ -582,13 +452,10 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a list of languages the user has selected in their browser’s settings, canonicalized using
-	 * {@link LocaleData::getCanonicalID}.
+	 * Returns the user preferred languages sorted by preference. The returned language IDs will be canonicalized using
+	 * {@link LocaleData::getCanonicalID}. This method returns false if the user does not have language preferences.
 	 *
-	 * Internally, this method checks the Accept-Language header that should have accompanied the request.
-	 * If that header was not present, the method will return `false`.
-	 *
-	 * @return array|false The preferred languages, or `false` if Craft is unable to determine them.
+	 * @return array The user preferred languages.
 	 */
 	public function getBrowserLanguages()
 	{
@@ -622,13 +489,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the host name, without “http://” or “https://”.
+	 * Returns the host name, without http(s)://.
 	 *
-	 * Internally, this method will first check the Host header that should have accompanied the request, which browsers
-	 * will set depending on the host name they are requesting. If that header does not exist, the method will fall back
-	 * on the SERVER_NAME server environment variable.
-	 *
-	 * @return string The host name.
+	 * @return string
 	 */
 	public function getHostName()
 	{
@@ -645,14 +508,12 @@ class HttpRequestService extends \CHttpRequest
 	/**
 	 * Sends a file to the user.
 	 *
-	 * We’re overriding this from {@link \CHttpRequest::sendFile()} so we can have more control over the headers.
+	 * We're overriding this from {@link CHttpRequest::sendFile()} so we can have more control over the headers.
 	 *
-	 * @param string     $path      The path to the file on the server.
-	 * @param string     $content   The contents of the file.
-	 * @param array|null $options   An array of optional options. Possible keys include 'forceDownload', 'mimeType',
-	 *                              and 'cache'.
-	 * @param bool|null  $terminate Whether the requset should be terminated after the file has been sent.
-	 *                              Defaults to `true`.
+	 * @param string     $path
+	 * @param string     $content
+	 * @param array|null $options
+	 * @param bool|null  $terminate
 	 *
 	 * @throws HttpException
 	 * @return null
@@ -803,11 +664,11 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns a cookie by its name.
+	 * Returns a cookie, if it's set.
 	 *
-	 * @param string $name The cookie name.
+	 * @param string $name
 	 *
-	 * @return \CHttpCookie|null The cookie, or `null` if it didn’t exist.
+	 * @return \CHttpCookie|null
 	 */
 	public function getCookie($name)
 	{
@@ -818,9 +679,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Deletes a cookie by its name.
+	 * Deletes a cookie.
 	 *
-	 * @param $name The cookie name.
+	 * @param $name
 	 *
 	 * @return null
 	 */
@@ -837,8 +698,6 @@ class HttpRequestService extends \CHttpRequest
     //    we're trying to resist the temptation of magic methods for the sake of code obviousness.
 
 	/**
-	 * Alias of {@link getIsSecureConnection()}.
-	 *
 	 * @return bool
 	 */
 	public function isSecureConnection()
@@ -847,8 +706,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIsPostRequest()}.
-	 *
 	 * @return bool
 	 */
 	public function isPostRequest()
@@ -857,8 +714,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIsDeleteRequest()}.
-	 *
 	 * @return bool
 	 */
 	public function isDeleteRequest()
@@ -867,8 +722,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIsDeleteViaPostRequest()}.
-	 *
 	 * @return bool
 	 */
 	public function isDeleteViaPostRequest()
@@ -877,8 +730,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIsPutRequest()}.
-	 *
 	 * @return bool
 	 */
 	public function isPutRequest()
@@ -887,8 +738,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIsPutViaPostRequest()}.
-	 *
 	 * @return bool
 	 */
 	public function isPutViaPostRequest()
@@ -897,8 +746,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIsAjaxRequest()}.
-	 *
 	 * @return bool
 	 */
 	public function isAjaxRequest()
@@ -907,8 +754,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIsFlashRequest()}.
-	 *
 	 * @return bool
 	 */
 	public function isFlashRequest()
@@ -917,8 +762,6 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Alias of {@link getIpAddress()}.
-	 *
 	 * @return string
 	 */
 	public function getUserHostAddress()
@@ -927,13 +770,11 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Retrieves the best guess of the client’s actual IP address taking into account numerous HTTP proxy headers due to
+	 * Retrieves the best guess of the client's actual IP address taking into account numerous HTTP proxy headers due to
 	 * variations in how different ISPs handle IP addresses in headers between hops.
 	 *
 	 * Considering any of these server vars besides REMOTE_ADDR can be spoofed, this method should not be used when you
-	 * need a trusted source for the IP address. Use `$_SERVER['REMOTE_ADDR']` instead.
-	 *
-	 * @return string The IP address.
+	 * need a trusted source of information for you IP address... use $_SERVER['REMOTE_ADDR'] instead.
 	 */
 	public function getIpAddress()
 	{
@@ -1006,13 +847,11 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Decodes the path info.
+	 * Wrapper for Yii's decodePathInfo, plus we clean up path separators.
 	 *
-	 * Replacement for Yii's {@link \CHttpRequest::decodePathInfo()}.
+	 * @param string $pathInfo
 	 *
-	 * @param string $pathInfo Encoded path info.
-	 *
-	 * @return string Decoded path info.
+	 * @return string
 	 */
 	public function decodePathInfo($pathInfo)
 	{
@@ -1027,9 +866,9 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the request’s query string, without the p= parameter.
+	 * Returns the part of the querystring minus any p= parameter regardless of whether PATH_INFO is enabled or not.
 	 *
-	 * @return string The query string.
+	 * @return string
 	 */
 	public function getQueryStringWithoutPath()
 	{
@@ -1056,9 +895,7 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Returns the path Craft should use to route this request, including the [CP trigger](http://buildwithcraft.com/docs/config-settings#cpTrigger) if it is in there.
-	 *
-	 * @return string The path.
+	 * @return string
 	 */
 	public function getNormalizedPath()
 	{
@@ -1079,7 +916,7 @@ class HttpRequestService extends \CHttpRequest
 	}
 
 	/**
-	 * Closes the current HTTP connection with the browser, without ending PHP script execution.
+	 * Ends the current HTTP request, without ending script execution.
 	 *
 	 * @param string|null $content
 	 *

@@ -178,14 +178,7 @@ class AssetIndexTool extends BaseTool
 											->group('sessionId')
 											->queryScalar();
 
-					if (empty($sessionsInProgress))
-					{
-						craft()->db->createCommand()->delete('assetindexdata');
-					}
-					else
-					{
-						craft()->db->createCommand()->delete('assetindexdata', array('not in', 'sessionId', $sessionsInProgress));
-					}
+					craft()->db->createCommand()->delete('assetindexdata', array('not in', 'sessionId', $sessionsInProgress));
 
 
 					// Generate the HTML for missing files and folders

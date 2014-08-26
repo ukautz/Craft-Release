@@ -8,27 +8,19 @@ namespace Craft;
  *
  * Creates a new migration in your plugins’ migrations/ folder with the given MigrationDescription:
  *
- * ```bash
- * yiic migrate create MigrationDescription PluginHandle
- * ```
+ *     yiic migrate create MigrationDescription PluginHandle
  *
  * Shows a list of migrations that have already been ran for this plugin:
  *
- * ```bash
- * yiic migrate history PluginHandle
- * ```
+ *     yiic migrate history PluginHandle
  *
  * Shows a list of migrations that have not been applied yet, but should be:
  *
- * ```bash
- * yiic migrate new PluginHandle
- * ```
+ *     yiic migrate new PluginHandle
  *
  * Runs all new migrations for a plugin:
  *
- * ```bash
- * yiic migrate up PluginHandle
- * ```
+ *     yiic migrate up PluginHandle
  *
  * Note that PluginHandle is optional in these examples and if it is not presented, the command will run against Craft.
  *
@@ -36,9 +28,9 @@ namespace Craft;
  *
  * This command will exit with the following exit codes:
  *
- * - `0` on success
- * - `1` on general error
- * - `2` on failed migration.
+ * * 0 on success
+ * * 1 on general error
+ * * 2 on failed migration.
  *
  * @author    Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @copyright Copyright (c) 2014, Pixel & Tonic, Inc.
