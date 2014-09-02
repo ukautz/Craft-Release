@@ -144,6 +144,7 @@ class SearchService extends BaseApplicationComponent
 
 		// Get where clause from tokens, bail out if no valid query is there
 		$where = $this->_getWhereClause();
+
 		if (!$where)
 		{
 			return array();
@@ -151,7 +152,7 @@ class SearchService extends BaseApplicationComponent
 
 		// Begin creating SQL
 		$sql = sprintf('SELECT * FROM %s WHERE %s',
-			craft()->db->quoteTableName(DbHelper::addTablePrefix('searchindex')),
+			craft()->db->quoteTableName(craft()->db->addTablePrefix('searchindex')),
 			$where
 		);
 
@@ -307,19 +308,19 @@ class SearchService extends BaseApplicationComponent
 		$score = 0;
 
 		// Loop through AND-terms and score each one against this row
-		foreach ($this->_terms AS $term)
+		foreach ($this->_terms as $term)
 		{
 			$score += $this->_scoreTerm($term, $row);
 		}
 
 		// Loop through each group of OR-terms
-		foreach ($this->_groups AS $terms)
+		foreach ($this->_groups as $terms)
 		{
 			// OR-terms are weighted less depending on the amount of OR terms in the group
 			$weight = 1 / count($terms);
 
 			// Get the score for each term and add it to the total
-			foreach ($terms AS $term)
+			foreach ($terms as $term)
 			{
 				$score += $this->_scoreTerm($term, $row, $weight);
 			}
@@ -341,14 +342,25 @@ class SearchService extends BaseApplicationComponent
 	{
 		// Skip these terms: locale and exact filtering is just that, no weighted search applies since all elements will
 		// already apply for these filters.
-		if ($term->attribute == 'locale' ||
+		if (
+			$term->attribute == 'locale' ||
 			$term->exact ||
 			!($keywords = $this->_normalizeTerm($term->term))
-		) return 0;
+		)
+		{
+			return 0;
+		}
 
 		// Account for substrings
-		if ($term->subLeft)  $keywords = $keywords.' ';
-		if ($term->subRight) $keywords = ' '.$keywords;
+		if ($term->subLeft)
+		{
+			$keywords = $keywords.' ';
+		}
+
+		if ($term->subRight)
+		{
+			$keywords = ' '.$keywords;
+		}
 
 		// Get haystack and safe word count
 		$haystack  = $this->_removePadding($row['keywords'], true);
@@ -448,7 +460,6 @@ class SearchService extends BaseApplicationComponent
 			{
 				$where[] = $sql;
 			}
-
 			// No SQL but keywords, save them for later
 			else if ($keywords)
 			{
@@ -467,13 +478,23 @@ class SearchService extends BaseApplicationComponent
 			$where[] = $this->_sqlMatch($words);
 		}
 
-		// Implode WHERE clause to a string
-		$where = implode($andor, $where);
-
-		// And group together for non-inclusive queries
-		if (!$inclusive)
+		// If we have valid where clauses now, stringify them
+		if (!empty($where))
 		{
-			$where = "({$where})";
+			// Implode WHERE clause to a string
+			$where = implode($andor, $where);
+
+			// And group together for non-inclusive queries
+			if (!$inclusive)
+			{
+				$where = "({$where})";
+			}
+		}
+		else
+		{
+			// If the tokens didn't produce a valid where clause,
+			// make sure we return false
+			$where = false;
 		}
 
 		return $where;
@@ -481,6 +502,7 @@ class SearchService extends BaseApplicationComponent
 
 	/**
 	 * Generates a piece of WHERE clause for fallback (LIKE) search from search term
+	 * or returns keywords to use in a MATCH AGAINST clause
 	 *
 	 * @param  SearchQueryTerm $term
 	 *
@@ -593,6 +615,9 @@ class SearchService extends BaseApplicationComponent
 		if ($subSelect && $sql)
 		{
 			$sql = $this->_sqlSubSelect($subSelect.' AND '.$sql);
+
+			// We need to reset keywords even if the subselect ended up in no results.
+			$keywords = null;			
 		}
 
 		return array($sql, $keywords);
