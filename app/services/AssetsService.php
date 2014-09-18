@@ -80,6 +80,11 @@ class AssetsService extends BaseApplicationComponent
 			$criteria = craft()->elements->getCriteria(ElementType::Asset, $criteria);
 		}
 
+		if (isset($criteria->filename))
+		{
+			$criteria->filename = StringHelper::escapeCommas($criteria->filename);
+		}
+
 		return $criteria->first();
 	}
 
@@ -1242,10 +1247,9 @@ class AssetsService extends BaseApplicationComponent
 		if ($response->isSuccess())
 		{
 			// Use the previous data to clean up
-			$originatingSource->deleteCreatedImages($oldFileModel);
+			craft()->assetTransforms->deleteAllTransformData($oldFileModel);
 			$originatingSource->finalizeTransfer($oldFileModel);
 
-			craft()->assetTransforms->deleteTransformIndexDataByFileId($oldFileModel);
 			IOHelper::deleteFile($localCopy);
 		}
 

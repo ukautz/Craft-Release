@@ -5525,11 +5525,11 @@ Craft.CategoryIndex = Craft.BaseElementIndex.extend(
 				this.$noCats.addClass('hidden');
 
 				var $element = $('<div class="element" data-editable' +
-					'data-id="'+response.id+'" ' +
-					'data-locale="'+Craft.locale+'" ' +
-					'data-status="'+response.status+'" ' +
-					'data-label="'+response.title+'" ' +
-					'data-url="'+response.url+'">' +
+					' data-id="'+response.id+'"' +
+					' data-locale="'+Craft.locale+'"' +
+					' data-status="'+response.status+'"' +
+					' data-label="'+response.title+'"' +
+					' data-url="'+response.url+'">' +
 					'<div class="label">' +
 						'<span class="status '+response.status+'"></span>' +
 						'<span class="title">'+response.title+'</span>' +
@@ -7235,7 +7235,7 @@ Craft.FieldToggle = Garnish.Base.extend(
 						height: this.showTarget._currentHeight,
 						overflow: 'hidden'
 					});
-				$target.stop()
+				$target.velocity('stop')
 					.velocity({height: this.showTarget._targetHeight}, 'fast', function() {
 						$target.height('auto');
 					});
@@ -7268,7 +7268,7 @@ Craft.FieldToggle = Garnish.Base.extend(
 
 				$target
 					.css('overflow', 'hidden')
-					.stop()
+					.velocity('stop')
 					.velocity({height: 0}, 'fast', function() {
 						$target.addClass('hidden');
 					});
@@ -8391,7 +8391,7 @@ Craft.LightSwitch = Garnish.Base.extend(
 
 		var animateCss = {};
 		animateCss['margin-'+Craft.left] = 0;
-		this.$innerContainer.stop().velocity(animateCss, Craft.LightSwitch.animationDuration, $.proxy(this, '_onSettle'));
+		this.$innerContainer.velocity('stop').velocity(animateCss, Craft.LightSwitch.animationDuration, $.proxy(this, '_onSettle'));
 
 		this.$input.val('1');
 		this.$outerContainer.addClass('on');
@@ -8405,7 +8405,7 @@ Craft.LightSwitch = Garnish.Base.extend(
 
 		var animateCss = {};
 		animateCss['margin-'+Craft.left] = this._getOffMargin();
-		this.$innerContainer.stop().velocity(animateCss, Craft.LightSwitch.animationDuration, $.proxy(this, '_onSettle'));
+		this.$innerContainer.velocity('stop').velocity(animateCss, Craft.LightSwitch.animationDuration, $.proxy(this, '_onSettle'));
 
 		this.$input.val('');
 		this.$outerContainer.removeClass('on');
@@ -9104,11 +9104,11 @@ Craft.ProgressBar = Garnish.Base.extend(
 
             if (animate)
             {
-                this.$innerProgressBar.stop().velocity({ width: percentage+'%' }, 'fast');
+                this.$innerProgressBar.velocity('stop').velocity({ width: percentage+'%' }, 'fast');
             }
             else
             {
-                this.$innerProgressBar.stop().width(percentage+'%');
+                this.$innerProgressBar.velocity('stop').width(percentage+'%');
             }
 		}
     }
@@ -9936,7 +9936,7 @@ Craft.StructureDrag = Garnish.Drag.extend(
 		}
 
 		// Animate things back into place
-		this.$draggee.stop().removeClass('hidden').velocity({
+		this.$draggee.velocity('stop').removeClass('hidden').velocity({
 			height: this.draggeeHeight
 		}, 'fast', $.proxy(function() {
 			this.$draggee.css('height', 'auto');
@@ -10348,12 +10348,12 @@ Craft.UpgradeModal = Garnish.Modal.extend(
 			clearTimeout(this.clearCheckoutFormTimeout);
 		}
 
-		this.$compareScreen.stop().animateLeft(-width, 'fast', $.proxy(function()
+		this.$compareScreen.velocity('stop').animateLeft(-width, 'fast', $.proxy(function()
 		{
 			this.$compareScreen.addClass('hidden');
 		}, this));
 
-		this.$checkoutScreen.stop().css(Craft.left, width).removeClass('hidden').animateLeft(0, 'fast');
+		this.$checkoutScreen.velocity('stop').css(Craft.left, width).removeClass('hidden').animateLeft(0, 'fast');
 	},
 
 	onTestBtnClick: function(ev)
@@ -10368,7 +10368,7 @@ Craft.UpgradeModal = Garnish.Modal.extend(
 			{
 				var width = this.getWidth();
 
-				this.$compareScreen.stop().animateLeft(-width, 'fast', $.proxy(function()
+				this.$compareScreen.velocity('stop').animateLeft(-width, 'fast', $.proxy(function()
 				{
 					this.$compareScreen.addClass('hidden');
 				}, this));
@@ -10382,8 +10382,8 @@ Craft.UpgradeModal = Garnish.Modal.extend(
 	{
 		var width = this.getWidth();
 
-		this.$compareScreen.stop().removeClass('hidden').animateLeft(0, 'fast');
-		this.$checkoutScreen.stop().animateLeft(width, 'fast', $.proxy(function()
+		this.$compareScreen.velocity('stop').removeClass('hidden').animateLeft(0, 'fast');
+		this.$checkoutScreen.velocity('stop').animateLeft(width, 'fast', $.proxy(function()
 		{
 			this.$checkoutScreen.addClass('hidden');
 		}, this))
@@ -10494,7 +10494,7 @@ Craft.UpgradeModal = Garnish.Modal.extend(
 			{
 				var width = this.getWidth();
 
-				this.$checkoutScreen.stop().animateLeft(-width, 'fast', $.proxy(function()
+				this.$checkoutScreen.velocity('stop').animateLeft(-width, 'fast', $.proxy(function()
 				{
 					this.$checkoutScreen.addClass('hidden');
 				}, this));
@@ -10587,17 +10587,17 @@ Craft.UpgradeModal = Garnish.Modal.extend(
  */
 Craft.Uploader = Garnish.Base.extend(
 {
-    uploader: null,
+	uploader: null,
 	allowedKinds: null,
-	_rejectedFiles: {},
 	$element: null,
+	settings: null,
+	_rejectedFiles: {},
 	_extensionList: null,
 	_totalFileCounter: 0,
 	_validFileCounter: 0,
-	settings: null,
 
-    init: function($element, settings)
-    {
+	init: function($element, settings)
+	{
 		this._rejectedFiles = {"size": [], "type": [], "limit": []};
 		this.$element = $element;
 		this.allowedKinds = null;
@@ -10605,7 +10605,7 @@ Craft.Uploader = Garnish.Base.extend(
 		this._totalFileCounter = 0;
 		this._validFileCounter = 0;
 
-        settings = $.extend({}, this.defaultSettings, settings);
+		settings = $.extend({}, this.defaultSettings, settings);
 
 		var events = settings.events;
 		delete settings.events;
@@ -10634,21 +10634,28 @@ Craft.Uploader = Garnish.Base.extend(
 		this.uploader.on('fileuploadadd', $.proxy(this, 'onFileAdd'));
 	},
 
-    /**
-     * Set uploader parameters.
-     */
-    setParams: function(paramObject)
-    {
-        this.uploader.fileupload('option', {formData: paramObject});
-    },
+	/**
+	 * Set uploader parameters.
+	 */
+	setParams: function(paramObject)
+	{
+		// If CSRF protection isn't enabled, these won't be defined.
+		if (typeof Craft.csrfTokenName !== 'undefined' && typeof Craft.csrfTokenValue !== 'undefined')
+		{
+			// Add the CSRF token
+			paramObject[Craft.csrfTokenName] = Craft.csrfTokenValue;
+		}
 
-    /**
-     * Get the number of uploads in progress.
-     */
-    getInProgress: function()
-    {
-        return this.uploader.fileupload('active');
-    },
+		this.uploader.fileupload('option', {formData: paramObject});
+	},
+
+	/**
+	 * Get the number of uploads in progress.
+	 */
+	getInProgress: function()
+	{
+		return this.uploader.fileupload('active');
+	},
 
 	/**
 	 * Return true, if this is the last upload.
@@ -10789,13 +10796,13 @@ Craft.Uploader = Garnish.Base.extend(
 		}
 	},
 
-    defaultSettings: {
-        dropZone: null,
+	defaultSettings: {
+		dropZone: null,
 		pasteZone: null,
 		fileInput: null,
 		sequentialUploads: true,
 		maxFileSize: Craft.maxUploadSize,
-		alloweKinds: null,
+		allowedKinds: null,
 		events: {},
 		canAddMoreFiles: null
 	}

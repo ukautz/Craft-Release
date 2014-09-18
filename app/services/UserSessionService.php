@@ -83,12 +83,7 @@ class UserSessionService extends \CWebUser
 			$this->authTimeout = craft()->config->getUserSessionDuration($data ? $data[3] : false);
 
 			// Should we skip auto login and cookie renewal?
-			$request = craft()->request;
-			$this->_dontExtendSession = (
-				$request->isGetRequest() &&
-				$request->isCpRequest() &&
-				$request->getParam('dontExtendSession')
-			);
+			$this->_dontExtendSession = !$this->shouldExtendSession();
 
 			$this->autoRenewCookie = !$this->_dontExtendSession;
 
@@ -130,16 +125,29 @@ class UserSessionService extends \CWebUser
 	 *
 	 * @param string|null $defaultUrl The default URL that should be returned if no return URL was stored.
 	 *
-	 * @return string The return URL, or $defaultUrl.
+	 * @return string|null The return URL, or $defaultUrl.
 	 */
 	public function getReturnUrl($defaultUrl = null)
 	{
-		if ($defaultUrl !== null)
+		$returnUrl = $this->getState('__returnUrl');
+
+		if ($returnUrl !== null)
 		{
-			$defaultUrl = UrlHelper::getUrl($defaultUrl);
+			// Strip out any tags that may have gotten in there by accident
+			// i.e. if there was a {siteUrl} tag in the Site URL setting, but no matching environment variable,
+			// so they ended up on something like http://example.com/%7BsiteUrl%7D/some/path
+			$returnUrl = str_replace(array('{', '}'), array('', ''), $returnUrl);
 		}
 
-		return $this->getState('__returnUrl', $defaultUrl);
+		if ($returnUrl === null)
+		{
+			$returnUrl = $defaultUrl;
+		}
+
+		if ($returnUrl !== null)
+		{
+			return UrlHelper::getUrl($returnUrl);
+		}
 	}
 
 	/**
@@ -328,9 +336,11 @@ class UserSessionService extends \CWebUser
 	{
 		if ($this->isGuest())
 		{
-			if (craft()->config->get('loginPath') === craft()->request->getPath())
+			// Ignore if this was called from the Login page
+			if (craft()->request->isSiteRequest() && craft()->config->get('loginPath') == craft()->request->getPath())
 			{
-				throw new Exception(Craft::t('requireLogin was used on the login page, creating an infinite loop.'));
+				Craft::log('UserSessionService::requireLogin() was called from the Login page.', LogLevel::Warning, true);
+				return;
 			}
 
 			if (!craft()->request->isAjaxRequest())
@@ -429,7 +439,7 @@ class UserSessionService extends \CWebUser
 				}
 
 				// Get how long this session is supposed to last.
-				$authTimeout = craft()->config->getUserSessionDuration($rememberMe);
+				$this->authTimeout = craft()->config->getUserSessionDuration($rememberMe);
 
 				$id = $this->_identity->getId();
 				$states = $this->_identity->getPersistentStates();
@@ -449,7 +459,7 @@ class UserSessionService extends \CWebUser
 						'username'      => $usernameModel->username,
 					)));
 
-					if ($authTimeout)
+					if ($this->authTimeout)
 					{
 						if ($this->allowAutoLogin)
 						{
@@ -471,7 +481,7 @@ class UserSessionService extends \CWebUser
 									$this->saveIdentityStates(),
 								);
 
-								$this->_identityCookie = $this->saveCookie('', $data, $authTimeout);
+								$this->_identityCookie = $this->saveCookie('', $data, $this->authTimeout);
 							}
 							else
 							{
@@ -885,6 +895,20 @@ class UserSessionService extends \CWebUser
 	}
 
 	/**
+	 * Returns whether the request should extend the current session timeout or not.
+	 *
+	 * @return bool
+	 */
+	public function shouldExtendSession()
+	{
+		return !(
+			craft()->request->isGetRequest() &&
+			craft()->request->isCpRequest() &&
+			craft()->request->getParam('dontExtendSession')
+		);
+	}
+
+	/**
 	 * Fires an 'onBeforeLogin' event.
 	 *
 	 * @param Event $event
@@ -1062,7 +1086,7 @@ class UserSessionService extends \CWebUser
 				$rememberMe = $data[3];
 				$states = $data[5];
 				$currentUserAgent = craft()->request->userAgent;
-				$authTimeout = craft()->config->getUserSessionDuration($rememberMe);
+				$this->authTimeout = craft()->config->getUserSessionDuration($rememberMe);
 
 				// Get the hashed token from the db based on login name and uid.
 				if (($sessionRow = $this->_findSessionToken($loginName, $uid)) !== false)
@@ -1100,8 +1124,7 @@ class UserSessionService extends \CWebUser
 									$states,
 								);
 
-								$this->_identityCookie = $this->saveCookie('', $data, $authTimeout);
-								$this->authTimeout = $authTimeout;
+								$this->_identityCookie = $this->saveCookie('', $data, $this->authTimeout);
 								$this->_sessionRestoredFromCookie = true;
 								$this->_userRow = null;
 							}

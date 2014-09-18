@@ -321,7 +321,7 @@ class IOHelper
 	public static function getExtension($path, $default = null, $suppressErrors = false)
 	{
 		$path = static::normalizePathSeparators($path);
-		$extension = StringHelper::toLowerCase($suppressErrors ? @pathinfo($path, PATHINFO_EXTENSION) : pathinfo($path, PATHINFO_EXTENSION));
+		$extension = $suppressErrors ? @pathinfo($path, PATHINFO_EXTENSION) : pathinfo($path, PATHINFO_EXTENSION);
 
 		if ($extension)
 		{
@@ -1402,7 +1402,14 @@ class IOHelper
 	 */
 	public static function isExtensionAllowed($extension)
 	{
-		return in_array($extension, static::getAllowedFileExtensions());
+		static $extensions = null;
+
+		if (is_null($extensions))
+		{
+			$extensions = array_map('mb_strtolower', static::getAllowedFileExtensions());
+		}
+
+		return in_array(mb_strtolower($extension), $extensions);
 	}
 
 	/**
@@ -1534,7 +1541,8 @@ class IOHelper
 	/**
 	 * Gets the default folder permissions from the config service.
 	 *
-	 * @deprecated Deprecated in 2.2. Use `craft()->config->get('defaultFolderPermissions')` instead.
+	 * @deprecated Deprecated in 2.2. Use
+	 *             {@link ConfigService::get() `craft()->config->get('defaultFolderPermissions')`} instead.
 	 * @return mixed
 	 */
 	public static function getDefaultFolderPermissions()
@@ -1545,7 +1553,8 @@ class IOHelper
 	/**
 	 * Gets the writable file permissions from the config service.
 	 *
-	 * @deprecated Deprecated in 2.2. Use `craft()->config->get('defaultFilePermissions')` instead.
+	 * @deprecated Deprecated in 2.2. Use
+	 *             {@link ConfigService::get() `craft()->config->get('defaultFilePermissions')`} instead.
 	 * @return mixed
 	 */
 	public static function getWritableFilePermissions()
@@ -1556,7 +1565,8 @@ class IOHelper
 	/**
 	 * Gets the writable folder permissions from the config service.
 	 *
-	 * @deprecated Deprecated in 2.2. Use `craft()->config->get('defaultFolderPermissions')` instead.
+	 * @deprecated Deprecated in 2.2. Use
+	 *             {@link ConfigService::get() `craft()->config->get('defaultFolderPermissions')`} instead.
 	 * @return mixed
 	 */
 	public static function getWritableFolderPermissions()

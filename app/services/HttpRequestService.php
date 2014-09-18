@@ -332,7 +332,7 @@ class HttpRequestService extends \CHttpRequest
 	 * Returns the MIME type that is going to be included in the response via the Content-Type header.
 	 *
 	 * @return string
-	 * @deprecated Deprecated in 2.2. Use HeaderHelper::getMimeType() instead.
+	 * @deprecated Deprecated in 2.2. Use {@link HeaderHelper::getMimeType()} instead.
 	 */
 	public function getMimeType()
 	{
@@ -1178,7 +1178,12 @@ class HttpRequestService extends \CHttpRequest
 		// Output the content, flush it to the browser, and close out the session
 		ob_end_flush();
 		flush();
-		session_write_close();
+
+		// Borrowed from CHttpSession->close() because session_write_close can cause PHP notices in some situations.
+		if (session_id() !== '')
+		{
+			@session_write_close();
+		}
 	}
 
 	// Protected Methods
