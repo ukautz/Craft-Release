@@ -36,7 +36,7 @@ class UsersController extends BaseController
 	 *
 	 * @var bool
 	 */
-	protected $allowAnonymous = array('actionLogin', 'actionLogout', 'actionGetAuthTimeout', 'actionForgotPassword', 'actionValidate', 'actionSetPassword', 'actionSaveUser');
+	protected $allowAnonymous = array('actionLogin', 'actionLogout', 'actionGetAuthTimeout', 'actionForgotPassword', 'actionSendActivationEmail', 'actionSaveUser', 'actionSetPassword', 'actionValidate');
 
 	// Public Methods
 	// =========================================================================
@@ -315,6 +315,11 @@ class UsersController extends BaseController
 
 		if ($userToValidate)
 		{
+			// Fire an 'onBeforeVerifyUser' event
+			craft()->users->onBeforeVerifyUser(new Event($this, array(
+				'user' => $userToValidate
+			)));
+
 			$isCodeValid = craft()->users->isVerificationCodeValidForUser($userToValidate, $code);
 		}
 

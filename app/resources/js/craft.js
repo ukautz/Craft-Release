@@ -2218,7 +2218,6 @@ Craft.BaseElementSelectInput = Garnish.Base.extend(
 					return this.elementSelect.getSelectedItems();
 				}, this) : null),
 				ignoreHandleSelector: '.delete',
-				caboose: $('<div class="caboose"/>'),
 				onSortChange: (this.selectable ? $.proxy(function() {
 					this.elementSelect.resetItemOrder();
 				}, this) : null)
@@ -3924,16 +3923,16 @@ Craft.AssetIndex = Craft.BaseElementIndex.extend(
 		// See if we have freshly uploaded files to add to selection
 		if (this._uploadedFileIds.length)
 		{
-			var item = null;
+			var $item = null;
 			for (var i = 0; i < this._uploadedFileIds.length; i++)
 			{
-				item = this.$main.find('[data-id=' + this._uploadedFileIds[i] + ']:first').parent();
+				$item = this.$main.find('.element[data-id=' + this._uploadedFileIds[i] + ']:first').parent();
 				if (this.getSelectedSourceState('mode') == 'table')
 				{
-					item = item.parent();
+					$item = $item.parent();
 				}
 
-				this.elementSelect.selectItem(item);
+				this.elementSelect.selectItem($item);
 			}
 
 			// Reset the list.
@@ -10012,7 +10011,6 @@ Craft.TagSelectInput = Craft.BaseElementSelectInput.extend(
 			filter: $.proxy(function() {
 				return this.elementSelect.getSelectedItems();
 			}, this),
-			caboose: $('<div class="caboose"/>'),
 			onSortChange: $.proxy(function() {
 				this.elementSelect.resetItemOrder();
 			}, this)
