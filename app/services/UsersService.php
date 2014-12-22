@@ -247,7 +247,7 @@ class UsersService extends BaseApplicationComponent
 
 			if (!$userRecord)
 			{
-				throw new Exception(Craft::t('No user exists with the ID “{id}”', array('id' => $user->id)));
+				throw new Exception(Craft::t('No user exists with the ID “{id}”.', array('id' => $user->id)));
 			}
 
 			$oldUsername = $userRecord->username;
@@ -613,8 +613,25 @@ class UsersService extends BaseApplicationComponent
 	 * @param string    $sessionToken The session token.
 	 *
 	 * @return string The session’s UID.
+	 * @deprecated Deprecated in 2.3. Use {@link UsersService::updateUserLoginInfo() `craft()->users->updateUserLoginInfo()`}
+	 *             and {@link UserSessionService::storeSessionToken() `craft()->userSession->storeSessionToken()`} instead.
 	 */
 	public function handleSuccessfulLogin(UserModel $user, $sessionToken)
+	{
+		$this->updateUserLoginInfo($user);
+
+		return craft()->userSession->storeSessionToken($user, $sessionToken);
+	}
+
+	/**
+	 * Updates a user's record for a successful login.
+	 *
+	 * @param UserModel $user
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function updateUserLoginInfo(UserModel $user)
 	{
 		$userRecord = $this->_getUserRecordById($user->id);
 
@@ -625,14 +642,7 @@ class UsersService extends BaseApplicationComponent
 		$userRecord->verificationCode = null;
 		$userRecord->verificationCodeIssuedDate = null;
 
-		$sessionRecord = new SessionRecord();
-		$sessionRecord->userId = $user->id;
-		$sessionRecord->token = $sessionToken;
-
-		$userRecord->save();
-		$sessionRecord->save();
-
-		return $sessionRecord->uid;
+		return $userRecord->save();
 	}
 
 	/**
@@ -1241,6 +1251,9 @@ class UsersService extends BaseApplicationComponent
 		}
 	}
 
+	// Events
+	// -------------------------------------------------------------------------
+
 	/**
 	 * Fires an 'onBeforeSaveUser' event.
 	 *
@@ -1467,7 +1480,7 @@ class UsersService extends BaseApplicationComponent
 
 		if (!$userRecord)
 		{
-			throw new Exception(Craft::t('No user exists with the ID “{id}”', array('id' => $userId)));
+			throw new Exception(Craft::t('No user exists with the ID “{id}”.', array('id' => $userId)));
 		}
 
 		return $userRecord;
