@@ -310,6 +310,7 @@ $configArray = array(
 		'app.models.TaskModel',
 		'app.models.UpdateModel',
 		'app.models.UpgradePurchaseModel',
+		'app.models.UrlModel',
 		'app.models.UserGroupModel',
 		'app.models.UserModel',
 		'app.models.UsernameModel',
