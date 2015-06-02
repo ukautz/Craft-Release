@@ -415,6 +415,7 @@ $configArray = array(
 		'app.tasks.LocalizeRelationsTask',
 		'app.tasks.ResaveAllElementsTask',
 		'app.tasks.ResaveElementsTask',
+		'app.tasks.UpdateElementSlugsAndUrisTask',
 		'app.tests.BaseTest',
 		'app.tests.TestApplication',
 		'app.tests.helpers.StubHelper',
@@ -447,6 +448,7 @@ $configArray = array(
 		'app.variables.AppVariable',
 		'app.variables.AssetSourceTypeVariable',
 		'app.variables.BaseComponentTypeVariable',
+		'app.variables.CategoryGroupsVariable',
 		'app.variables.ConfigVariable',
 		'app.variables.CpVariable',
 		'app.variables.CraftVariable',
@@ -732,7 +734,6 @@ $components['log']['routes'] = array(
 $components['httpSession']['autoStart']   = true;
 $components['httpSession']['cookieMode']  = 'only';
 $components['httpSession']['class']       = 'Craft\HttpSessionService';
-$components['httpSession']['sessionName'] = 'CraftSessionId';
 
 $components['userSession']['class'] = 'Craft\UserSessionService';
 $components['userSession']['allowAutoLogin']  = true;
