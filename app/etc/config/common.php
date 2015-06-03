@@ -166,6 +166,7 @@ $configArray = array(
 		'app.etc.state.StatePersister',
 		'app.etc.templating.BaseTemplate',
 		'app.etc.templating.StringTemplate',
+		'app.etc.templating.TwigParser',
 		'app.etc.templating.twigextensions.Cache_Node',
 		'app.etc.templating.twigextensions.Cache_TokenParser',
 		'app.etc.templating.twigextensions.CraftTwigExtension',
