@@ -3152,8 +3152,6 @@ Garnish.HUD = Garnish.Base.extend({
 			this.$footer = $footer.insertAfter(this.$mainContainer);
 			this.$hud.addClass('has-footer');
 		}
-
-		this.updateSizeAndPosition();
 	},
 
 	/**
@@ -3543,7 +3541,7 @@ Garnish.HUD = Garnish.Base.extend({
 		windowSpacing: 10,
 		tipWidth: 30,
 		minBodyWidth: 200,
-		minBodyHeight: 200,
+		minBodyHeight: 0,
 		onShow: $.noop,
 		onHide: $.noop,
 		onSubmit: $.noop,
@@ -3846,7 +3844,7 @@ Garnish.Menu = Garnish.Base.extend({
 		var topClearance = this._anchorOffset.top - this._windowScrollTop,
 			bottomClearance = this._windowHeight + this._windowScrollTop - this._anchorOffsetBottom;
 
-		if (bottomClearance >= this._menuHeight || bottomClearance >= topClearance)
+		if (bottomClearance >= this._menuHeight || bottomClearance >= topClearance || topClearance < this._menuHeight)
 		{
 			this.$container.css('top', this._anchorOffsetBottom);
 		}

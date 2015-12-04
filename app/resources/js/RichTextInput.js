@@ -123,6 +123,15 @@ Craft.RichTextInput = Garnish.Base.extend(
 		this.redactor.core.editor()
 			.on('focus', $.proxy(this, 'onEditorFocus'))
 			.on('blur', $.proxy(this, 'onEditorBlur'));
+
+		if (this.redactor.opts.toolbarFixed && !Craft.RichTextInput.scrollPageOnReady)
+		{
+			Garnish.$doc.on('ready', function() {
+				Garnish.$doc.trigger('scroll');
+			});
+
+			Craft.RichTextInput.scrollPageOnReady = true;
+		}
 	},
 
 	customizeToolbar: function()
@@ -241,7 +250,6 @@ Craft.RichTextInput = Garnish.Base.extend(
 							this.redactor.code.sync();
 						}
 						this.redactor.observe.images();
-						this.redactor.dropdown.hideAll();
 					}
 				}, this),
 				closeOtherModals: false,

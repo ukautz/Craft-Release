@@ -48,7 +48,6 @@ Craft.Tool = Garnish.Base.extend(
 				'</div>');
 
 			this.hud = new Garnish.HUD(this.$trigger, this.$form, {
-				minBodyHeight: 0,
 				orientations: ['top', 'bottom', 'right', 'left'],
 				hudClass: 'hud toolhud',
 				onSubmit: $.proxy(this, 'onSubmit')
