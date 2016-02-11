@@ -118,6 +118,7 @@ class WebApp extends \CWebApplication
 		if ($validationKey = $this->config->get('validationKey'))
 		{
 			$this->security->setValidationKey($validationKey);
+			$this->getComponent('securityManager')->setValidationKey($validationKey);
 		}
 
 		// Attach our own custom Logger
